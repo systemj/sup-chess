@@ -1,5 +1,10 @@
 # a web chess thing
 
+## local testing
+```
+docker-compose up
+```
+
 ## references
 ### frontend
 - https://websockets.readthedocs.io/en/stable/

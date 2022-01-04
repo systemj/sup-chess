@@ -1,0 +1,8 @@
+flask
+flask-socketio
+# https://github.com/eventlet/eventlet/issues/702
+# https://github.com/benoitc/gunicorn/pull/2581
+eventlet==0.30.2
+gunicorn
+prometheus_client
+prometheus_flask_exporter

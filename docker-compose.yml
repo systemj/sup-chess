@@ -1,0 +1,19 @@
+version: "3.9"  # optional since v1.27.0
+services:
+  chess-engine:
+    build: engine
+    ports:
+      - "8001:8000"
+  chess-server:
+    build: gameserver
+    ports:
+      - "8000:8000"
+#     volumes:
+#       - .:/code
+#       - logvolume01:/var/log
+#     links:
+#       - redis
+#   redis:
+#     image: redis
+# volumes:
+#   logvolume01: {}

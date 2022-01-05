@@ -4,16 +4,19 @@ services:
     build: engine
     ports:
       - "8001:8000"
+    volumes:
+      - ./engine:/app
   chess-server:
     build: gameserver
     ports:
       - "8000:8000"
-#     volumes:
-#       - .:/code
+    volumes:
+      - ./gameserver:/app
 #       - logvolume01:/var/log
 #     links:
 #       - redis
 #   redis:
 #     image: redis
 # volumes:
-#   logvolume01: {}
+#   engine: ./engine
+#   gameserver: ./gameserver

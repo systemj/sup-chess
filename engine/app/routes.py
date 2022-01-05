@@ -18,8 +18,8 @@ def init(app):
     @app.route("/get_move", methods=['POST'])
     def _get_move():
         data = request.get_json()
-        move = engine.get_move(**data)
-        return jsonify({"move": move}), 200
+        result = engine.get_move(**data)
+        return jsonify(result), 200
 
     @app.route("/valid_moves", methods=['POST'])
     def _valid_moves():

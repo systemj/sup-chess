@@ -8,6 +8,9 @@ $( document ).ready(function() {
     // empty board
     var board = Chessboard('myBoard')
 
+    // set random gameid
+    $("#gameid").val(Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5));
+
     // player piece movement
     function onDragStart (source, piece, position, orientation) {
       // observers can't move pieces
@@ -70,6 +73,13 @@ $( document ).ready(function() {
     function onSnapEnd () {
       board.position(game.fen())
     }
+
+    function sendStatus () {
+      socket.emit("status",
+      {
+          "board_state": game.fen(),
+      });
+    }
     
     var config = {
       draggable: true,
@@ -79,6 +89,11 @@ $( document ).ready(function() {
       onDrop: onDrop,
       onSnapEnd: onSnapEnd
     }
+
+    // flip board orientation
+    $("#flip").on("click", function() {
+      board.flip();
+    });
 
     // Start, join, or observe a game
     $("#start").on("click", function() {
@@ -104,9 +119,9 @@ $( document ).ready(function() {
         config.orientation = "black";
 
         // if the opponent is a chess engine, send the initial board state to start the game
-        //if ($("#opponent").val() != "human") {
+        if ($("#opponent").val() != "human") {
           sendPlayerMove("", "");
-        //}
+        }
       }
       
       // update the board to the starting position
@@ -136,11 +151,25 @@ $( document ).ready(function() {
         }
     });
 
-    socket.on('*', function(data) { console.log(data)});
+    // socket.on('status_request', function(data) {
+    //   if ($("#role").val() === "w") {
+    //     sendStatus();
+    //   }
+    // });
+
+    socket.on('status', function(data) {
+      if ($("#role").val() != "w") {
+        board.position(data.board_state);
+        game = new Chess(data.board_state);
+      }
+    });
 
     // joined game event
     socket.on('joined_game', function(data) {
       console.log(data);
+      if ($("#role").val() === "w") {
+        sendStatus();
+      }
     });
 
      // socket.disconnect();

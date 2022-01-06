@@ -10,11 +10,6 @@ from app import metrics
 logger = logging.getLogger("gunicorn.error")
 
 def init(socketio):
-    @socketio.on("test event")
-    def _test_event_handler(data):
-        logger.info(f"got event: {data}")
-        emit("stuff", {"x": "y"})
-    
     @socketio.on("player_move")
     def _player_move(data):
         logger.info(f"player_move: {data}")
@@ -31,4 +26,16 @@ def init(socketio):
         logger.info(f"join_game: {data}")
         session["gameid"] = data["gameid"]
         join_room(data["gameid"])
-        emit("joined_game", {"gameid": data["gameid"]})
+        emit("joined_game", data, room=session.get("gameid", None))
+
+    # @socketio.on("status_request")
+    # def _status_request(data):
+    #     logger.info(f"status_request: {data}")
+    #     # broadcast the status request to everyone in the game
+    #     emit("status_request", data, room=session.get("gameid", None))
+
+    @socketio.on("status")
+    def _status(data):
+        logger.info(f"status: {data}")
+        # broadcast the status to everyone in the game
+        emit("status", data, room=session.get("gameid", None))

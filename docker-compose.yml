@@ -1,22 +1,21 @@
-version: "3.9"  # optional since v1.27.0
+version: "3.9"
 services:
-  chess-engine:
-    build: engine
+  chess-frontend:
+    build: frontend
     ports:
-      - "8001:8000"
+      - "8000:80"
     volumes:
-      - ./engine:/app
+      - ./frontend/html:/usr/share/nginx/html
+      - ./frontend/default.conf:/etc/nginx/conf.d/default.conf
   chess-server:
     build: gameserver
     ports:
-      - "8000:8000"
+      - "8001:8000"
     volumes:
       - ./gameserver:/app
-#       - logvolume01:/var/log
-#     links:
-#       - redis
-#   redis:
-#     image: redis
-# volumes:
-#   engine: ./engine
-#   gameserver: ./gameserver
+  chess-engine:
+    build: engine
+    ports:
+      - "8002:8000"
+    volumes:
+      - ./engine:/app

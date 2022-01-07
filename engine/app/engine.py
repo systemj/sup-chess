@@ -9,6 +9,9 @@ logger = logging.getLogger("gunicorn.error")
 opponents = {
     "gnuchess": {
         "command": ["/usr/games/gnuchess", "--uci"]
+    },
+    "stockfish": {
+        "command": ["/usr/games/stockfish"]
     }
 }
 

@@ -8,16 +8,15 @@ from app import events
 
 socketio = SocketIO()
 
+
 def create_app(config_file="config.yaml"):
     """ Flask app factory function """
     app = Flask(__name__)
-    app.debug = True
+
     # set context for handling multiple worker processes
     with app.app_context():
         # initialize socketio
-        # TESTING ONLY ZOMG!
-        socketio.init_app(app, cors_allowed_origins="*")
-        # socketio.init_app(app)
+        socketio.init_app(app, async_mode='eventlet', cors_allowed_origins="*", message_queue='redis://redis')
 
         # initialize logging
         log.init(app)

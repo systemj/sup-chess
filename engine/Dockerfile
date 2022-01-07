@@ -40,7 +40,7 @@ ENV GUNICORN_CMD_ARGS="--config gunicorn_config.py --workers 4 --bind 0.0.0.0:${
 COPY --from=build ${python_venv_base} ${python_venv_base}
 
 # Install additional package dependencies here
-RUN apt install -y gnuchess
+RUN apt install -y gnuchess stockfish
 
 # Copy in application files
 WORKDIR ${workdir}

@@ -19,3 +19,5 @@ services:
       - "8002:8000"
     volumes:
       - ./engine:/app
+  redis:
+    image: redis

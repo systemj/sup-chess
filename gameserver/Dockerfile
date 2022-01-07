@@ -40,7 +40,7 @@ ENV GUNICORN_CMD_ARGS="--config gunicorn_config.py --worker-class eventlet --wor
 COPY --from=build ${python_venv_base} ${python_venv_base}
 
 # Install additional package dependencies here
-#RUN apt install -y gnuchess
+# ...
 
 # Copy in application files
 WORKDIR ${workdir}

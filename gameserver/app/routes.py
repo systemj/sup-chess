@@ -15,18 +15,6 @@ def init(app):
     def _ready():
         return jsonify({"ready": True})
 
-    # @app.route("/get_move", methods=['POST'])
-    # def _get_move():
-    #     data = request.get_json()
-    #     move = engine.get_move(**data)
-    #     return jsonify({"move": move}), 200
-
-    # @app.route("/valid_moves", methods=['POST'])
-    # def _valid_moves():
-    #     data = request.get_json()
-    #     moves = engine.valid_moves(**data)
-    #     return jsonify({"valid_moves": moves}), 200
-
     # catch-all route for bad requests
     @app.route('/<path:path>')
     @metrics.metrics.do_not_track()

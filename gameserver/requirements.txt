@@ -8,3 +8,4 @@ prometheus_client
 prometheus_flask_exporter
 redis
 requests
+pyaml

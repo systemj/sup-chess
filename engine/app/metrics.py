@@ -18,15 +18,6 @@ metrics = GunicornInternalPrometheusMetrics(app=None)
 # static info metric
 metrics.info("chess_engine_info", "Chess engine info", version="0.0.1")
 
-# In a multiprocess configuration Prometheus Gauges have the following mode options:
-# multiprocess_mode = all (all dead/alive pids), liveall, livesum, min, max
-# Counters, Summaries, and Histograms work normally
-
-# start_time_epoch_seconds = Gauge("start_time_epoch_seconds", "App start epoch timestamp", multiprocess_mode="min")
-#hello_total = Counter("hello_total", "Total of all hello values")
-
-# your metrics...
-
 
 def init(app):
     """ initialize app metrics """

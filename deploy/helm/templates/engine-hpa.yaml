@@ -1,0 +1,28 @@
+{{- if .Values.engine.autoscaling.enabled }}
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "sup-chess.fullname" . }}-engine
+  labels:
+    {{- include "sup-chess.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "sup-chess.fullname" . }}-engine
+  minReplicas: {{ .Values.engine.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.engine.autoscaling.maxReplicas }}
+  metrics:
+    {{- if .Values.engine.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ .Values.engine.autoscaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .Values.engine.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ .Values.engine.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end }}

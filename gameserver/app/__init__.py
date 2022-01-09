@@ -32,7 +32,7 @@ def create_app(config_file="config.yaml"):
         # initialize socketio
         socketio.init_app(app, async_mode='eventlet',
             cors_allowed_origins="*",
-            message_queue=f"redis://{app.config["redis_host"]}:{app.config["redis_port"]}")
+            message_queue=f'redis://{app.config["redis_host"]}:{app.config["redis_port"]}')
 
         # load events
         events.init(app, socketio)

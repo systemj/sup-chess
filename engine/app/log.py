@@ -14,7 +14,6 @@ def init(app):
         app.logger.handlers = logging.handlers
         app.logger.setLevel(logger.level)
 
-
     @app.after_request
     def _after_request(response):
         """ flask logging - request log """

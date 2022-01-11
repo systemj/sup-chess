@@ -1,6 +1,7 @@
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "sup-chess.fullname" . -}}
-{{- $svcPort := .Values.service.port -}}
+{{- $frontendPort := .Values.frontend.service.port -}}
+{{- $serverPort := .Values.server.service.port -}}
 {{- if and .Values.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
   {{- if not (hasKey .Values.ingress.annotations "kubernetes.io/ingress.class") }}
   {{- $_ := set .Values.ingress.annotations "kubernetes.io/ingress.class" .Values.ingress.className}}
@@ -18,10 +19,25 @@ metadata:
   name: {{ $fullName }}
   labels:
     {{- include "sup-chess.labels" . | nindent 4 }}
-  {{- with .Values.ingress.annotations }}
+
   annotations:
+  {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/server-snippets: |
+      location /socket.io/ {
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_http_version 1.1;
+          proxy_set_header X-Forwarded-Host $http_host;
+          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_set_header X-Forwarded-For $remote_addr;
+          proxy_set_header Host $host;
+          proxy_set_header Connection "upgrade";
+          proxy_cache_bypass $http_upgrade;
+        }
 spec:
   {{- if and .Values.ingress.className (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
   ingressClassName: {{ .Values.ingress.className }}
@@ -41,21 +57,33 @@ spec:
     - host: {{ .host | quote }}
       http:
         paths:
-          {{- range .paths }}
-          - path: {{ .path }}
-            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
-            pathType: {{ .pathType }}
+          - path: /
+            {{- if (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            pathType: ImplementationSpecific
             {{- end }}
             backend:
               {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
               service:
-                name: {{ $fullName }}
+                name: {{ $fullName }}-frontend
                 port:
-                  number: {{ $svcPort }}
+                  number: {{ $frontendPort }}
               {{- else }}
-              serviceName: {{ $fullName }}
-              servicePort: {{ $svcPort }}
+              serviceName: {{ $fullName }}-frontend
+              servicePort: {{ $frontendPort }}
               {{- end }}
-          {{- end }}
+          - path: /socket.io/
+            {{- if (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            pathType: ImplementationSpecific
+            {{- end }}
+            backend:
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+              service:
+                name: {{ $fullName }}-server
+                port:
+                  number: {{ $serverPort }}
+              {{- else }}
+              serviceName: {{ $fullName }}-server
+              servicePort: {{ $serverPort }}
+              {{- end }}
     {{- end }}
 {{- end }}

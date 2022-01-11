@@ -89,6 +89,9 @@ $( document ).ready(function() {
     if ($("#role").val() === "w") {
       sendStatus();
     }
+    if (($("#role").val() === "b") && ($("#opponent").val() !== "human")) {
+      sendStatus();
+    }
   });
 
   //

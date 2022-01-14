@@ -62,7 +62,7 @@ $( document ).ready(function() {
   });
 
   // remote move event
-  socket.on('remote_move', function(data) {
+  socket.on('player_move', function(data) {
     console.log("remote_move");
     console.log(data);
     if ($("#role").val() === "observer") {
@@ -84,7 +84,7 @@ $( document ).ready(function() {
   });
 
   // client join event
-  socket.on('joined_game', function(data) {
+  socket.on('join_game', function(data) {
     console.log(data);
     if ($("#role").val() === "w") {
       sendStatus();

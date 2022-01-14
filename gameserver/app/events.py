@@ -14,7 +14,7 @@ def init(app, socketio):
     def _player_move(data):
         logger.info(f"player_move: {data}")
         # broadcast the move to everyone in the game
-        emit("remote_move", data, room=session.get("gameid", None))
+        emit("player_move", data, room=session.get("gameid", None))
         # get a chess engine move for non-human opponents
         if data["opponent"] != "human":
             r = requests.post(
@@ -22,14 +22,14 @@ def init(app, socketio):
                 json=data
             )
             logger.info(r.json())
-            emit("remote_move", r.json(), room=session.get("gameid", None))
+            emit("player_move", r.json(), room=session.get("gameid", None))
 
     @socketio.on("join_game")
     def _join_game(data):
         logger.info(f"join_game: {data}")
         session["gameid"] = data["gameid"]
         join_room(data["gameid"])
-        emit("joined_game", data, room=session.get("gameid", None))
+        emit("join_game", data, room=session.get("gameid", None))
 
     @socketio.on("status")
     def _status(data):

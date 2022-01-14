@@ -26,7 +26,7 @@ def get_move(board_state: str = "", time_limit: int = 1, opponent: str = "gnuche
     engine.quit()
     return { "board_state": board.fen(), "from": chess.square_name(move.from_square), "to": chess.square_name(move.to_square), "uci": move.uci() }
 
-def valid_moves(board_state: str = "", opponent: str = "gnuchess"):
+def valid_moves(board_state: str = "", opponent: str = "gnuchess", **kwargs):
     logger.info(f"board_state: {board_state}")
     engine = chess.engine.SimpleEngine.popen_uci(opponents[opponent]["command"])
     board = chess.Board(board_state)

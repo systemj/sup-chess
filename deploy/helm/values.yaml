@@ -48,6 +48,7 @@ ingress:
   #    hosts:
   #      - sup-chess.local
 
+
 # chess engine
 engine:
   replicaCount: 1
@@ -81,6 +82,8 @@ engine:
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
 
+
+# chess server
 server:
   replicaCount: 1
 
@@ -114,7 +117,7 @@ server:
     # targetMemoryUtilizationPercentage: 80
 
 
-
+# web frontend
 frontend:
   replicaCount: 1
 
@@ -146,11 +149,6 @@ frontend:
     maxReplicas: 100
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
-
-
-
-
-
 
 
 # redis dependent chart values

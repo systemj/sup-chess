@@ -57,7 +57,7 @@ engine:
     repository: systemj/chess-engine
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
+    tag: "latest"
 
   service:
     type: ClusterIP
@@ -91,7 +91,7 @@ server:
     repository: systemj/chess-server
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
+    tag: "latest"
 
   service:
     type: ClusterIP
@@ -125,7 +125,7 @@ frontend:
     repository: systemj/chess-frontend
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
+    tag: "latest"
 
   service:
     type: ClusterIP

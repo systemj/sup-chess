@@ -18,9 +18,16 @@ ENV PATH="$python_venv_base/bin:$PATH"
 # setup virtual environment
 RUN python -m venv ${python_venv_base}
 
-# install requirements
+# install python requirements
 COPY requirements.txt .
 RUN pip install --upgrade -r requirements.txt
+
+# install compile deps
+RUN apt install -y git gcc g++ make cmake curl
+
+# build sjaakii engine
+RUN curl -L -o - http://www.eglebbk.dds.nl/program/download/sjaakii-1.4.1-src.tar.gz | tar zxvf -
+RUN cd SjaakII && mkdir build && cd build && cmake .. && make
 
 
 ### final container
@@ -39,8 +46,17 @@ ENV GUNICORN_CMD_ARGS="--config gunicorn_config.py --workers 4 --bind 0.0.0.0:${
 # Copy virtual environment from build
 COPY --from=build ${python_venv_base} ${python_venv_base}
 
+# Copy compiled chess engines from build
+COPY --from=build /SjaakII/build/sjaakii /usr/games/sjaakii
+
 # Install additional package dependencies here
-RUN apt install -y gnuchess stockfish
+RUN apt install -y ethereal-chess gnuchess stockfish
+
+# future engines with too many deps by default:
+#   glaurung
+# redundant:
+#   fairy-stockfish (stockfish)
+#   fruit (gnuchess, toga2)
 
 # Copy in application files
 WORKDIR ${workdir}

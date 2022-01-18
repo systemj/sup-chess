@@ -7,8 +7,14 @@ import logging
 logger = logging.getLogger("gunicorn.error")
 
 opponents = {
+    "ethereal": {
+        "command": ["/usr/games/ethereal-chess"]
+    },
     "gnuchess": {
         "command": ["/usr/games/gnuchess", "--uci"]
+    },
+    "sjaakii": {
+        "command": ["/usr/games/sjaakii"]
     },
     "stockfish": {
         "command": ["/usr/games/stockfish"]

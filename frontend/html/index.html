@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <title>sup, chess</title>
     <link rel="stylesheet" href="css/chessboard.css">
-    <link rel="icon" type="image/x-icon" href="/img/chesspieces/wikipedia/wP.png">
+    <link rel="icon" type="image/x-icon" href="/img/chesspieces/wP.svg">
   </head>
   <body>
-    <div id="myBoard" style="width: 400px"></div>
+    <div id="myBoard" style="width: 362px"></div>
     <input type="text" id="gameid" value="gameid">
     <select name="role" id="role">
       <option value="w">White</option>
@@ -23,6 +23,7 @@
     </select>
     <button id="start">Start</button>
     <button id="flip">Flip</button>
+    <input type="checkbox" id="show_legal_moves">Show Legal Moves</button>
     <script src="js/jquery-3.6.0.min.js"></script>
     <script src="js/chessboard.js"></script>
     <script src="js/chess.js"></script>

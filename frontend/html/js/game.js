@@ -3,22 +3,28 @@ $( document ).ready(function() {
   // this is most of https://chessboardjs.com/examples/5001
   //
 
-  // initialize empty board
-  var board = Chessboard('myBoard')
-
   // standard chessboardjs board config
   var config = {
     draggable: true,
-    position: 'start',
+    position: '',
     orientation: 'white',
     pieceTheme: 'img/chesspieces/{piece}.svg',
     onDragStart: onDragStart,
     onDrop: onDrop,
-    onSnapEnd: onSnapEnd
+    onSnapEnd: onSnapEnd,
+    onMouseoutSquare: onMouseoutSquare,
+    onMouseoverSquare: onMouseoverSquare
   }
+
+  // initialize empty board
+  var board = Chessboard('myBoard', config)
 
   // initialize new game
   var game = new Chess()
+
+  // valid move indicator colors
+  var whiteSquareGrey = '#a9a9a9'
+  var blackSquareGrey = '#696969'
 
   // set random gameid
   $("#gameid").val(Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5));
@@ -27,6 +33,27 @@ $( document ).ready(function() {
   var socket = io.connect('http://' + document.domain + ':' + location.port);
 
   console.log("ready!");
+
+  //
+  // helper functions
+  //
+
+  // remove square valid move indication
+  function removeGreySquares () {
+    $('#myBoard .square-55d63').css('background', '')
+  }
+
+  // set square valid move move indication
+  function greySquare (square) {
+    var $square = $('#myBoard .square-' + square)
+
+    var background = whiteSquareGrey
+    if ($square.hasClass('black-3c85d')) {
+      background = blackSquareGrey
+    }
+
+    $square.css('background', background)
+  }
 
   //
   // socketio event emit functions
@@ -140,6 +167,34 @@ $( document ).ready(function() {
     board.position(game.fen())
   }
 
+  function onMouseoverSquare (square, piece) {
+    if ($("#show_legal_moves").prop("checked") === false) return;
+
+    // only show moves on the player's turn
+    if (game.turn() !== $("#role").val()) return;
+
+    // get list of possible moves for this square
+    var moves = game.moves({
+      square: square,
+      verbose: true
+    })
+
+    // exit if there are no moves available for this square
+    if (moves.length === 0) return
+
+    // highlight the square they moused over
+    greySquare(square)
+
+    // highlight the possible squares for this piece
+    for (var i = 0; i < moves.length; i++) {
+      greySquare(moves[i].to)
+    }
+  }
+
+  function onMouseoutSquare (square, piece) {
+    removeGreySquares()
+  }
+
   //
   // button click handlers
   //
@@ -172,6 +227,7 @@ $( document ).ready(function() {
     }
 
     // update the board to the starting position
+    config.position = 'start';
     board = Chessboard('myBoard', config);
   });
 

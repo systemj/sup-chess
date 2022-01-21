@@ -11,6 +11,7 @@ $( document ).ready(function() {
     draggable: true,
     position: 'start',
     orientation: 'white',
+    pieceTheme: 'img/chesspieces/{piece}.svg',
     onDragStart: onDragStart,
     onDrop: onDrop,
     onSnapEnd: onSnapEnd
